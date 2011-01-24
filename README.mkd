@@ -1,0 +1,114 @@
+NAME
+==============================
+
+KirinTransactionManager - transaction handling for database.
+
+
+SYNOPSIS
+==============================
+
+basic usage:
+--------------------
+
+    require_once 'Kirin/TransactionManager.php';
+    $pdo = new PDO('sqlite::memory:');
+    $tm  = KirinTransactionManager($pdo);
+    
+    $tm->txn_begin( );
+        $pdo->query("INSERT INTO foo (id, var) VALUES (1, 'baz')";
+    $tm->txn_commit( );
+
+scope_gurad usage:
+--------------------
+
+    require_once 'Kirin/TransactionManager.php';
+    $pdo = new PDO('sqlite::memory:');
+    $tm  = KirinTransactionManager($pdo);
+    
+    my $txn = $tm->txn_scope( );
+        $pdo->query("INSERT INTO foo (id, var) VALUES (1, 'baz')";
+    $txn->commit( );
+
+nested transaction usage:
+--------------------
+
+    require_once 'Kirin/TransactionManager.php';
+    $pdo = new PDO('sqlite::memory:');
+    $tm  = KirinTransactionManager($pdo);
+    
+    $txn1 = $tm->txn_scope( );
+        $pdo->query("INSERT INTO foo (id, var) VALUES (1, 'baz')";
+        
+        $txn2 = $tm->txn_scope( );
+            $pdo->query("INSERT INTO foo (id, var) VALUES (2, 'bab')";
+        $txn2->commit( );
+    
+        $txn3 = $tm->txn_scope( );
+            $pdo->query("INSERT INTO foo (id, var) VALUES (3, 'bee')";
+        $txn3->commit( );
+    $txn1->commit( );
+
+
+DESCRIPTION
+==============================
+
+KirinTransactionManager is a simple transaction manager.
+based on [DBIx::TransactionManager][dbix-transaction-manager]
+
+[dbix-transaction-manager]: http://github.com/nekokak/p5-DBIx-TransactionManager
+
+
+KirinTransactionManager's METHODS
+==============================
+
+$tm = KirinTransactionManager->new($dbh)
+--------------------
+
+get KirinTransactionManager's instance object.
+$pdo parameter must be required.
+
+$txn = $tm->txn_scope( )
+--------------------
+
+get KirinTransactionManagerScopeGuard's instance object.
+
+$tm->txn_begin( )
+--------------------
+
+Start the transaction.
+
+$tm->txn_rollback( )
+--------------------
+
+Rollback the transaction.
+
+$tm->txn_commit( )
+--------------------
+
+Commit the transaction.
+
+$tm->in_transaction( )
+--------------------
+
+are you in transaction?
+
+
+KirinTransactionManagerScopeGuard's METHODS
+==============================
+
+$txn->commit( )
+--------------------
+
+Commit the transaction.
+
+$txn->rollback( )
+--------------------
+
+Rollback the transaction.
+
+
+SEE ALSO
+==============================
+* [DBIx::TransactionManager][dbix-transaction-manager]
+
+[dbix-transaction-manager]: http://github.com/nekokak/p5-DBIx-TransactionManager
