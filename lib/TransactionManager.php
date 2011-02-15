@@ -13,9 +13,9 @@ class TransactionManager
         $this->dbh = $dbh;
     }
 
-    function txn_scope ( )
+    function txn_scope ($caller=null)
     {
-        return new TransactionManagerScopeGurd($this);
+        return new TransactionManagerScopeGurd($this, $caller);
     }
 
     function txn_begin ( )
@@ -77,11 +77,17 @@ class TransactionManagerScopeGurd
 {
     protected $dismiss = false;
     protected $object  = null;
+    protected $caller  = null;
 
-    function __construct ($obj)
+    function __construct ($obj, $caller=null)
     {
+        if ( !$caller ) {
+            $caller = debug_backtrace(false);
+            $caller = $caller[1];
+        }
         $obj->txn_begin( );
         $this->object = $obj;
+        $this->caller = $caller;
     }
 
     function rollback ( )
@@ -107,8 +113,20 @@ class TransactionManagerScopeGurd
             return null;
         }
 
+        $caller       = $this->caller;
+        $destroyed_at = debug_backtrace( );
+        $destroyed_at = $destroyed_at[0];
+
+        trigger_error(
+            "Transaction was aborted without calling an explicit commit or rollback at".
+            " {$destroyed_at['file']} line {$destroyed_at['line']}.".
+            " (Guard created at {$caller['file']} line {$caller['line']})",
+            E_USER_WARNING
+        );
+
         try {
             $this->object->txn_rollback( );
+            $this->object = null;
         }
         catch (Exception $e) {
             throw new TransactionManagerException(
