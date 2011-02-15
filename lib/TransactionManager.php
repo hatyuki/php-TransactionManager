@@ -2,7 +2,7 @@
 
 class TransactionManager
 {
-    const VERSION = '0.001';
+    const VERSION = '0.002';
 
     protected $dbh = null;
     protected $active_transaction = 0;

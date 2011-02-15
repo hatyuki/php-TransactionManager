@@ -1,5 +1,9 @@
 Revision history for PHP extension TransactionManager
 
+0.002
+   2011-02-15
+        - MOD: s/KirinTransactionManager/TransactionManager/
+
 0.001
    2011-01-24
         - original version
