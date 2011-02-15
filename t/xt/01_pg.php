@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 require_once dirname(__FILE__).'/../lib/setup.php';
-require_once 'Kirin/TransactionManager.php';
+require_once 'TransactionManager.php';
 require_once 'Utils.php';
 
 if ( !isset($_SERVER['PG_DSN']) || !isset($_SERVER['PG_USER']) ) {
@@ -21,7 +21,7 @@ $pdo->query("
 function pg ($t)
 {
     global $pdo;
-    $tm   = new KirinTransactionManager($pdo);
+    $tm   = new TransactionManager($pdo);
     $txn1 = $tm->txn_scope( );
     $pdo->query("INSERT INTO job (func) VALUES ('baz')");
     $txn2 = $tm->txn_scope( );

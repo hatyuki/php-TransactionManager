@@ -1,7 +1,7 @@
 NAME
 ==============================
 
-KirinTransactionManager - transaction handling for database.
+TransactionManager - transaction handling for database.
 
 
 SYNOPSIS
@@ -10,9 +10,9 @@ SYNOPSIS
 basic usage:
 --------------------
 
-    require_once 'Kirin/TransactionManager.php';
+    require_once 'TransactionManager.php';
     $pdo = new PDO('sqlite::memory:');
-    $tm  = KirinTransactionManager($pdo);
+    $tm  = TransactionManager($pdo);
     
     $tm->txn_begin( );
         $pdo->query("INSERT INTO foo (id, var) VALUES (1, 'baz')";
@@ -21,9 +21,9 @@ basic usage:
 scope_gurad usage:
 --------------------
 
-    require_once 'Kirin/TransactionManager.php';
+    require_once 'TransactionManager.php';
     $pdo = new PDO('sqlite::memory:');
-    $tm  = KirinTransactionManager($pdo);
+    $tm  = TransactionManager($pdo);
     
     my $txn = $tm->txn_scope( );
         $pdo->query("INSERT INTO foo (id, var) VALUES (1, 'baz')";
@@ -32,9 +32,9 @@ scope_gurad usage:
 nested transaction usage:
 --------------------
 
-    require_once 'Kirin/TransactionManager.php';
+    require_once 'TransactionManager.php';
     $pdo = new PDO('sqlite::memory:');
-    $tm  = KirinTransactionManager($pdo);
+    $tm  = TransactionManager($pdo);
     
     $txn1 = $tm->txn_scope( );
         $pdo->query("INSERT INTO foo (id, var) VALUES (1, 'baz')";
@@ -52,25 +52,25 @@ nested transaction usage:
 DESCRIPTION
 ==============================
 
-KirinTransactionManager is a simple transaction manager.
+TransactionManager is a simple transaction manager.
 based on [DBIx::TransactionManager][dbix-transaction-manager]
 
 [dbix-transaction-manager]: http://github.com/nekokak/p5-DBIx-TransactionManager
 
 
-KirinTransactionManager's METHODS
+TransactionManager's METHODS
 ==============================
 
-$tm = KirinTransactionManager->new($dbh)
+$tm = TransactionManager->new($dbh)
 --------------------
 
-get KirinTransactionManager's instance object.
+get TransactionManager's instance object.
 $pdo parameter must be required.
 
 $txn = $tm->txn_scope( )
 --------------------
 
-get KirinTransactionManagerScopeGuard's instance object.
+get TransactionManagerScopeGuard's instance object.
 
 $tm->txn_begin( )
 --------------------
@@ -93,7 +93,7 @@ $tm->in_transaction( )
 are you in transaction?
 
 
-KirinTransactionManagerScopeGuard's METHODS
+TransactionManagerScopeGuard's METHODS
 ==============================
 
 $txn->commit( )

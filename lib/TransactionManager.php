@@ -1,6 +1,6 @@
 <?php
 
-class KirinTransactionManager
+class TransactionManager
 {
     const VERSION = '0.001';
 
@@ -15,7 +15,7 @@ class KirinTransactionManager
 
     function txn_scope ( )
     {
-        return new KirinTransactionManagerScopeGurd($this);
+        return new TransactionManagerScopeGurd($this);
     }
 
     function txn_begin ( )
@@ -46,9 +46,9 @@ class KirinTransactionManager
         }
 
         if ($this->rollbacked_in_nested_transaction) {
-            throw new KirinTMException(
+            throw new TransactionManagerException(
                 'tried to commit but already rollbacked in nested transaction.',
-                KirinTMException::NESTED_TRANSACTION_ERROR
+                TransactionManagerException::NESTED_TRANSACTION_ERROR
             );
         }
         else if ($this->active_transaction > 1) {
@@ -73,7 +73,7 @@ class KirinTransactionManager
 }
 
 
-class KirinTransactionManagerScopeGurd
+class TransactionManagerScopeGurd
 {
     protected $dismiss = false;
     protected $object  = null;
@@ -111,16 +111,16 @@ class KirinTransactionManagerScopeGurd
             $this->object->txn_rollback( );
         }
         catch (Exception $e) {
-            throw new KirinTMException(
+            throw new TransactionManagerException(
                 "Rollback failed: {$e->getMessage( )}",
-                KirinTMException::ROLLBACK_FAILED
+                TransactionManagerException::ROLLBACK_FAILED
             );
         }
     }
 }
 
 
-class KirinTMException extends Exception
+class TransactionManagerException extends Exception
 {
     const KIRIN_TM_EXCEPTION       = 200;
     const NESTED_TRANSACTION_ERROR = 201;

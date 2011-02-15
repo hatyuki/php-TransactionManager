@@ -1,14 +1,14 @@
 #!/usr/bin/env php
 <?php
 require_once dirname(__FILE__).'/lib/setup.php';
-require_once 'Kirin/TransactionManager.php';
+require_once 'TransactionManager.php';
 require_once 'Utils.php';
 
 
 function do_basic_transaction ($t)
 {
     $pdo = Utils::setup( );
-    $tm  = new KirinTransactionManager($pdo);
+    $tm  = new TransactionManager($pdo);
 
     $tm->txn_begin( );
     $pdo->query("INSERT INTO foo (id, var) VALUES (1, 'baz')");
@@ -23,7 +23,7 @@ function do_basic_transaction ($t)
 function do_rollback ($t)
 {
     $pdo = Utils::setup( );
-    $tm  = new KirinTransactionManager($pdo);
+    $tm  = new TransactionManager($pdo);
 
     $tm->txn_begin( );
     $pdo->query("INSERT INTO foo (id, var) VALUES (2, 'bal')");
@@ -36,7 +36,7 @@ function do_rollback ($t)
 function in_transactin ($t)
 {
     $pdo = Utils::setup( );
-    $tm  = new KirinTransactionManager($pdo);
+    $tm  = new TransactionManager($pdo);
 
     $t->ok( !$tm->in_transaction( ) );
 
